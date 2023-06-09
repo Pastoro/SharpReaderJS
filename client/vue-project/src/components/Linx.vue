@@ -17,6 +17,7 @@ export default{
                 //Colors, rendering stuff
               },
               knownword : {
+                tha : String
                 //Colors, rendering stuff
               }
             }

@@ -1,7 +1,7 @@
 <template>
 <label class = "linxreader">
 <!-- TODO assign dynamic id -->
-<button @click="OnClick">  {{ renderWord }}  </button>
+<button >  {{ renderWord}}  </button>
 </label>
     
 </template>
@@ -10,28 +10,38 @@
 
 <script>
     export default {
-        props: ['renderWord'],
+        props: {renderWord : String,
+                wordId : String,
+                learned : Object
+            },
         data() {
             return {
-                word: ""
+                word: "",
+                id: null
             }
         },
         methods: {
 
                 OnClick() {
                     
-                    this.$emit("linxreaderload",word);
+                    this.$emit("linxreaderload",this.word);
 
 
                 }
 
 
         },
-        beforeMount() {
+        mounted() {
 //            this.word = this.word;
+
         }
         
     }
 
 
 </script>
+
+<style>
+
+
+</style>
