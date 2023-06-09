@@ -1,29 +1,34 @@
 <template>
 <label class = "linxreader">
-<span class=""> {{  word  }} </span> <!-- TODO assign dynamic id -->
+<!-- TODO assign dynamic id -->
+<button @click="OnClick">  {{ renderWord }}  </button>
 </label>
-
+    
 </template>
 
 
 
 <script>
     export default {
+        props: ['renderWord'],
         data() {
             return {
                 word: ""
             }
         },
         methods: {
-            method() {
+
+                OnClick() {
+                    
+                    this.$emit("linxreaderload",word);
 
 
-            }
+                }
 
 
         },
         beforeMount() {
-            this.word = this.word;
+//            this.word = this.word;
         }
         
     }

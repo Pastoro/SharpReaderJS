@@ -5,9 +5,13 @@
       <h1>This is the Linx Page</h1>
       <linximporter @load="LoadHandler"></linximporter>
         <div class="content" v-for="[word, state], index in wordMap"> <!-- v-for state === unknown word, class = unknownword  -->
-          <div :style="{color : activeColor}" :id="`container-${index}`"> {{ RenderWordType}} {{ word }}  </div> <!--XXX possibly add a check in here to change the colour accordingly-->
+          <div :style="{color : activeColor}" :id="`container-${index}`">{{ word }}   <!--XXX possibly add a check in here to change the colour accordingly-->
+          <linxreader :renderWord="word" @linxreaderload="LinxReaderLoaded"> </linxreader>
+        </div>
         </div> <!-- TODO TODO replace wordMap with simply a list of words in the text file, then iterate through each word, make a call back to the server, have the server return a JSON object for each word. Before all of this create a default JSON object to initalize each word, each local JSON object should then be passed back to server for storage.-->
     </div>
+
+
 
   </template>
  //XXX Might be better to iterate over the map in the method beforehand
@@ -29,6 +33,7 @@
           rawhtml : '<span style="color: red">This should be red.</span>',
           wordMap : Map,
           word : "",
+          linxWord: ""
           }//one sentence class holds multiple sentenceitems
           //TODO keeping wordState in data return might not be necessary. Keep an array of both the word and the wordState in data return and simply modify the state within a method to allow for freezing. It should still update the rendering when one of the elements of the array changes.
           
@@ -51,6 +56,9 @@
       
 
 
+        },
+        LinxReaderLoaded(linxWord) {
+          this.linxWord = linxWord
         },
         computed: {
           RenderWordType() {
