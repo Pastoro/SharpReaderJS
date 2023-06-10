@@ -1,7 +1,10 @@
 <template>
 <label class = "linxreader">
 <!-- TODO assign dynamic id -->
-<button >  {{ renderWord}}  </button>
+<button 
+@click="$emit('stateChanged',learnedReturn)"
+>
+{{ renderWord }} </button>
 </label>
     
 </template>
@@ -12,20 +15,36 @@
     export default {
         props: {renderWord : String,
                 wordId : String,
-                learned : Object
+                learned : Number,
+                created() {
+                    this.wordReturn = this.renderWord;
+                    this.idReturn = this.wordId;
+                    this.learnedReturn = this.learned;
+                }
             },
         data() {
             return {
-                word: "",
-                id: null
+                wordReturn: "",
+                idReturn: null,
+                learnedReturn: 0,
+                sentence : {
+            sentenceitem : {
+              unknownword : {
+                //Colors, rendering stuff
+              },
+              knownword : {
+                tha : String
+                //Colors, rendering stuff
+              }
+            }
+          }
             }
         },
         methods: {
 
                 OnClick() {
                     
-                    this.$emit("linxreaderload",this.word);
-
+                    
 
                 }
 

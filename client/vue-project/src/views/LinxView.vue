@@ -6,7 +6,13 @@
       <linximporter @load="LoadHandler"></linximporter>
         <div class="grid-container"  > <!-- v-for state === unknown word, class = unknownword  -->
           <!-- <div :style="{color : activeColor}" :id="`container-${index}`">{{ word }}   XXX possibly add a check in here to change the colour accordingly-->
-          <linxreader v-for="[word, state], index in wordMap" :id="`wordthing${index}`" :renderWord="word" :learned="state" :class="linxreadermethod(renderWord)" @click="linxreadermethod(this.renderWord)" > </linxreader>
+          <linxreader 
+          v-for="element in words"
+          :renderWord="element.word"
+          :learned="element.state"
+          :class="linxreadermethod(element.word,element.state)"
+          @click="element.state = ClickEvent(element.state)"
+          ></linxreader>
             <!--TODO update wordthing dynamically -->
         </div> <!-- TODO TODO replace wordMap with simply a list of words in the text file, then iterate through each word, make a call back to the server, have the server return a JSON object for each word. Before all of this create a default JSON object to initalize each word, each local JSON object should then be passed back to server for storage.-->
     
@@ -22,6 +28,8 @@ import linximporter from "../components/Linx.vue"
     import linxreader from "../components/LinxReader.vue"
     import axios from 'axios';
 import { render } from "vue";
+
+
     export default{
       mounted : function() {
           this.HandleTextRender();
@@ -31,15 +39,17 @@ import { render } from "vue";
           //XXX they've probably done it by simply making different classes for every kind of interaction and then simply switching the interaction on event
 
           return {
+           // renderWord: '',
+           // learned: '',
+          classValue: "",
           activeColor: 'red',
-          mySentence : {},
+          mywordState : null,
           rawhtml : '<span style="color: red">This should be red.</span>',
           wordMap : Map,
-          state : "",
-          word : "",
-
-          renderState: null,
-          learned: null
+          separateState : {},
+          words: [
+            //arrayword:"", arraystate:{}
+          ]
           }//one sentence class holds multiple sentenceitems
           //TODO keeping wordState in data return might not be necessary. Keep an array of both the word and the wordState in data return and simply modify the state within a method to allow for freezing. It should still update the rendering when one of the elements of the array changes.
           
@@ -50,9 +60,21 @@ import { render } from "vue";
         }
         ,
         methods: {
-          LoadHandler(textMap, sentence) {
-            this.wordMap = textMap;
-            this.mySentence = sentence;
+          LoadHandler(textMap, wordState) {
+            //this.wordMap = textMap;
+            this.mywordState = wordState;
+            console.log(this.mywordState);
+            var word;
+            var state;
+
+            for (const [key, value] of textMap) {
+              word = key;
+              state = value;
+              this.words.push({word, state});
+            }
+            console.log(this.words);
+            //TODO add check for if first element of array is missing the word element and if so remove it
+            //this.words.forEach(word => {console.log(word)});
           },
           HandleTextRender(){
 
@@ -69,24 +91,27 @@ import { render } from "vue";
           //Make call when this is called to call back to server to check for user data and dynamically update the CSS styling from there
 
         },
-        linxreadermethod: function(renderWord) {
+        linxreadermethod: function(renderWord, state) {
             var classA = '';
             console.log(renderWord);
-            if (this.learned == this.mySentence.sentenceitem.unknownword) {
+            console.log(state);
+            if (state === this.mywordState.DefaultState) {
+              classA = 'wordthingUnknown';
+            }
+            else if (state === this.mywordState.LookedUpState) {
               classA = 'wordthingKnown';
             }
             return classA;
+          },
+          ClickEvent: function(state) {
+            console.log(state);
+            state = this.mywordState.LookedUpState;
+            return state;
           }
+
       },
         computed: {
-          linxreaderclass: function(word) {
-            var classA = '';
-            console.log(this.renderWord);
-            if (this.renderWord == "CREATE") {
-              classA = 'wordthingKnown';
-            }
-            return classA;
-          }
+
         }
 
         
@@ -106,7 +131,7 @@ import { render } from "vue";
 }
 .wordthingKnown {
   display:inline;
-  background-color: rgba(221, 10, 10, 0.8);
+  background-color: rgba(255, 0, 34, 0.8);
   border: 1px solid rgba(25, 0, 255, 0.8);
   padding: 20px;
   font-size: 30px;

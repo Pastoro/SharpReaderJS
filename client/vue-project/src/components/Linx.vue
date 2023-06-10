@@ -11,17 +11,7 @@ export default{
     data() {
 
         return{
-            sentence : {
-            sentenceitem : {
-              unknownword : {
-                //Colors, rendering stuff
-              },
-              knownword : {
-                tha : String
-                //Colors, rendering stuff
-              }
-            }
-          }
+
     }
     },
     methods:{
@@ -50,6 +40,17 @@ export default{
         //TODO check how to avoid scripts being run when uploading file from user
         //TODO also split string on newline currently it will add two words to one element if there is no space but there is an empty lin        
         TextIntoMap(textContent){
+            const sentence = {
+            sentenceitem : {
+              unknownword : {
+                //Colors, rendering stuff
+              },
+              knownword : {
+                tha : String
+                //Colors, rendering stuff
+              }
+            }
+          }
             const wordState = Object.freeze({
             DefaultState: 0,
             LookedUpState: 1,
@@ -61,9 +62,9 @@ export default{
                 //TODO reimplement stemmer before this is done
             //TODO this should return sentences instead
             wordArray.forEach(word => {
-                textMap.set(word, this.sentence.sentenceitem.unknownword);
+                textMap.set(word, wordState.DefaultState);
             });
-            this.$emit("load", textMap, this.sentence);
+            this.$emit("load", textMap, wordState);
             return textMap;
         }
     }
