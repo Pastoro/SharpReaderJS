@@ -59,8 +59,7 @@ export default{
             });
             const textMap = new Map();
             var wordArray = textContent.split(" ");
-                //TODO reimplement stemmer before this is done
-            //TODO this should return sentences instead
+            //TODO this should return sentences instead. Probably create sentence divs in LinxView instead.
             wordArray.forEach(word => {
                 textMap.set(word, wordState.DefaultState);
             });

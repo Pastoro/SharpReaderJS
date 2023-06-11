@@ -1,18 +1,26 @@
 <template>
 <label class = "linxreader">
-<!-- TODO assign dynamic id -->
+
 <button 
-@click="$emit('stateChanged',learnedReturn)"
+@click="isActive=!isActive"
 >
+
 {{ renderWord }} </button>
+<LinxMenu v-if="isActive" :searchedTerm="renderWord" :queryResult="returnedWord" ></LinxMenu>
 </label>
-    
+
 </template>
 
 
 
 <script>
+
+    import LinxMenu from './LinxMenu.vue';
+
     export default {
+      components: {
+    LinxMenu
+},
         props: {renderWord : String,
                 wordId : String,
                 learned : Number,
@@ -24,6 +32,7 @@
             },
         data() {
             return {
+                isActive: false,
                 wordReturn: "",
                 idReturn: null,
                 learnedReturn: 0,
@@ -42,16 +51,8 @@
         },
         methods: {
 
-                OnClick() {
-                    
-                    
-
-                }
 
 
-        },
-        mounted() {
-//            this.word = this.word;
 
         }
         

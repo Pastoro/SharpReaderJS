@@ -3,31 +3,30 @@
         
         <br>
       <h1>This is the Linx Page</h1>
-      <linximporter @load="LoadHandler"></linximporter>
+      <linximporter @load="LoadHandler"></linximporter> <!-- TODO assign dynamic id -->
         <div class="grid-container"  > <!-- v-for state === unknown word, class = unknownword  -->
           <!-- <div :style="{color : activeColor}" :id="`container-${index}`">{{ word }}   XXX possibly add a check in here to change the colour accordingly-->
-          <linxreader 
+          <linxreader    
           v-for="element in words"
-          :renderWord="element.word"
+          :renderWord="element.word" 
           :learned="element.state"
           :class="linxreadermethod(element.word,element.state)"
           @click="element.state = ClickEvent(element.state)"
-          ></linxreader>
-            <!--TODO update wordthing dynamically -->
-        </div> <!-- TODO TODO replace wordMap with simply a list of words in the text file, then iterate through each word, make a call back to the server, have the server return a JSON object for each word. Before all of this create a default JSON object to initalize each word, each local JSON object should then be passed back to server for storage.-->
+          >
+            
+        
+          </linxreader>
+        </div>
     
       </div>
-<!-- TODO convert from using struct from Linx component to using props in LinxReader component-->
 
 
   </template>
- //XXX Might be better to iterate over the map in the method beforehand
-<script>
-    import { stringifyExpression } from "@vue/compiler-core";
-import linximporter from "../components/Linx.vue"
+<script> //XXX you can probably use CSS to move the menu component around whilst only having it be bound to the grid-container class
+    import linximporter from "../components/Linx.vue"
     import linxreader from "../components/LinxReader.vue"
     import axios from 'axios';
-import { render } from "vue";
+    import LinxMenu from "../components/LinxMenu.vue";
 
 
     export default{
@@ -35,8 +34,6 @@ import { render } from "vue";
           this.HandleTextRender();
         },
         data () {
-          
-          //XXX they've probably done it by simply making different classes for every kind of interaction and then simply switching the interaction on event
 
           return {
            // renderWord: '',
@@ -50,14 +47,16 @@ import { render } from "vue";
           words: [
             //arrayword:"", arraystate:{}
           ]
-          }//one sentence class holds multiple sentenceitems
-          //TODO keeping wordState in data return might not be necessary. Keep an array of both the word and the wordState in data return and simply modify the state within a method to allow for freezing. It should still update the rendering when one of the elements of the array changes.
+          }
           
         },
         components: {
-        linximporter,
-        linxreader
-        }
+    linximporter,
+    linxreader,
+    LinxMenu,
+    LinxMenu,
+    LinxMenu
+}
         ,
         methods: {
           LoadHandler(textMap, wordState) {
@@ -73,7 +72,6 @@ import { render } from "vue";
               this.words.push({word, state});
             }
             console.log(this.words);
-            //TODO add check for if first element of array is missing the word element and if so remove it
             //this.words.forEach(word => {console.log(word)});
           },
           HandleTextRender(){
@@ -145,6 +143,9 @@ import { render } from "vue";
   padding: 20px;
   font-size: 30px;
   text-align: center;
+}
+.grid-container linxreader{
+  position: relative;
 }
 
 </style>
