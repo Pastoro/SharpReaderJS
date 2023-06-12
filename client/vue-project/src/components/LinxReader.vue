@@ -6,7 +6,7 @@
 >
 
 {{ renderWord }} </button>
-<LinxMenu v-if="isActive" :searchedTerm="renderWord" :queryResult="returnedWord" ></LinxMenu>
+<LinxMenu v-if="isActive" :searchedTerm="renderWord" :queryResult="returnWord" @gotDictionaryResult="(response) => {returnWord = response}"></LinxMenu>
 </label>
 
 </template>
@@ -24,7 +24,9 @@
         props: {renderWord : String,
                 wordId : String,
                 learned : Number,
+                returnedWord : String,
                 created() {
+
                     this.wordReturn = this.renderWord;
                     this.idReturn = this.wordId;
                     this.learnedReturn = this.learned;
@@ -32,6 +34,7 @@
             },
         data() {
             return {
+                returnWord: "",
                 isActive: false,
                 wordReturn: "",
                 idReturn: null,

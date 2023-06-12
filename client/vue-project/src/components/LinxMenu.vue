@@ -6,7 +6,8 @@
 
         <div class="linxmenuPopup" >
 
-            <p > {{ searchedTerm}} </p>
+            <p class="search"> {{ searchedTerm }} </p>
+            <p class="query"> {{ queryResult }}</p>
 
         </div>
 
@@ -42,18 +43,17 @@ export default{
         }
     },
     mounted() {
-        this.getDictionaryResult(this.searchedTerm);
+        this.resultTerm = this.getDictionaryResult(this.searchedTerm);
     },
     methods:{
-        getDictionaryResult(term){ //TODO supposedly computed properties are better and watch is discouraged
+        async getDictionaryResult(term){ //TODO supposedly computed properties are better and watch is discouraged
+            //TODO Leave this as is for now, assuming we're gonna' use a third-party dictionary for this anyways.
             console.log(term);
             console.log("FIRED");
-            var returnType = "";
-            axios({ method: "GET", params: {QueryWord: term}, responseType: 'json', url: " http://localhost:8030/fetchWord"}).then(function (response) {
-            console.log(response.data); returnType = response.data;
-            //console.log(JSON.stringify(JSON.parse(response), null, 2));
-          });
-          this.$emit('gotDictionaryResult',returnType);
+
+            var returnType = ((await axios({ method: "GET", params: {QueryWord: term}, responseType: 'json', url: " http://localhost:8030/fetchWord"})).data);
+          console.log(returnType);
+          this.$emit("gotDictionaryResult",returnType);
           return returnType;
         }
     }
@@ -76,6 +76,9 @@ export default{
     z-index: 30;
     position: absolute;
     
+}
+.query{
+    color:maroon;
 }
 
 
