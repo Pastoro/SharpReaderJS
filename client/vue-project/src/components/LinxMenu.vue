@@ -2,11 +2,11 @@
 <template>
     <label class ="linxmenu">
 
+        
 
+        <div  class="linxmenuPopup" >
 
-        <div class="linxmenuPopup" >
-
-            <p class="search"> {{ searchedTerm }} </p>
+            <p class="search" > {{ searchedTerm }} </p>
             <p class="query"> {{ queryResult }}</p>
 
         </div>
@@ -30,21 +30,20 @@ export default{
     data(){
         return{
             searchTerm: "",
-            resultTerm: ""
+            resultTerm: "",
+            isMounted: false
         }
     },
     props: {
         searchedTerm: String,
         queryResult: String,
-        
+        mountedBool: Boolean,
         created(){
             this.searchTerm = this.searchedTerm;
             this.resultTerm = this.queryResult;
         }
     },
-    mounted() {
-        this.resultTerm = this.getDictionaryResult(this.searchedTerm);
-    },
+
     methods:{
         async getDictionaryResult(term){ //TODO supposedly computed properties are better and watch is discouraged
             //TODO Leave this as is for now, assuming we're gonna' use a third-party dictionary for this anyways.
@@ -56,7 +55,11 @@ export default{
           this.$emit("gotDictionaryResult",returnType);
           return returnType;
         }
-    }
+    },
+    mounted(){
+        this.$emit('menumounted', true);
+        console.log("MOUNTED MENU HERE");
+    },
 }
 
 
@@ -68,14 +71,12 @@ export default{
 <style>
 
 .linxmenuPopup {
-    color: blueviolet;
-    text-shadow: 18cm;
+    color: violet;
     background-color: whitesmoke;
     width: 400px;
     height: 500px;
     z-index: 30;
     position: absolute;
-    
 }
 .query{
     color:maroon;

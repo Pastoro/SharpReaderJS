@@ -5,19 +5,32 @@
       <h1>This is the Linx Page</h1>
       <linximporter @load="LoadHandler"></linximporter> <!-- TODO assign dynamic id -->
         <div class="grid-container"  > <!-- v-for state === unknown word, class = unknownword  -->
+
           <!-- <div :style="{color : activeColor}" :id="`container-${index}`">{{ word }}   XXX possibly add a check in here to change the colour accordingly-->
           <linxreader    
-          v-for="element in words"
+          v-for="element,index in words"
+          :id="`linxreader${index}`"
+          word="element.word"
           :renderWord="element.word" 
           :learned="element.state"
           :class="linxreadermethod(element.word,element.state)"
-          @click="element.state = ClickEvent(element.state)"
+          @click="element.state = ClickEvent(element.state, element.word, index);getDictionaryResult(element.word)"
           >
-            
-        
+
           </linxreader>
-        </div>
+
+
     
+        </div>
+        
+        <Teleport  :to="`#linxreader${displayIndex}`"  >     
+    <LinxMenu
+    @gotDictionaryResult="(response) => {returnWord = response}"
+     :queryResult="returnWord" 
+     :searchedTerm="menuWord" >
+    </LinxMenu> 
+    </Teleport>  
+
       </div>
 
 
@@ -30,14 +43,16 @@
 
 
     export default{
-      mounted : function() {
-          this.HandleTextRender();
-        },
+
         data () {
 
           return {
            // renderWord: '',
            // learned: '',
+          returnWord : "",
+          menuDisplay : false,
+          displayIndex: 0,
+          menuWord : "",
           classValue: "",
           activeColor: 'red',
           mywordState : null,
@@ -59,6 +74,18 @@
 }
         ,
         methods: {
+          async getDictionaryResult(term){ //TODO supposedly computed properties are better and watch is discouraged
+            //TODO Leave this as is for now, assuming we're gonna' use a third-party dictionary for this anyways.
+            console.log(term);
+            console.log("FIRED");
+
+            var returnType = ((await axios({ method: "GET", params: {QueryWord: term}, responseType: 'json', url: " http://localhost:8030/fetchWord"})).data);
+          console.log(returnType);
+          this.$emit("gotDictionaryResult",returnType);
+          //this.menuDisplay = !this.menuDisplay;
+          console.log(ctx.teleports);
+          return returnType;
+          },
           LoadHandler(textMap, wordState) {
             //this.wordMap = textMap;
             this.mywordState = wordState;
@@ -70,6 +97,7 @@
               word = key;
               state = value;
               this.words.push({word, state});
+              console.log(this.words);
             }
             console.log(this.words);
             //this.words.forEach(word => {console.log(word)});
@@ -101,7 +129,11 @@
             }
             return classA;
           },
-          ClickEvent: function(state) {
+          ClickEvent: function(state, word, index) {
+            
+            this.menuWord = word;
+            this.displayIndex = index;
+            console.log(index);
             console.log(state);
             state = this.mywordState.LookedUpState;
             return state;
@@ -110,6 +142,9 @@
       },
         computed: {
 
+        },
+        mounted(){
+          console.log("MOUNTED HERE");
         }
 
         
@@ -144,7 +179,8 @@
   font-size: 30px;
   text-align: center;
 }
-.grid-container linxreader{
+
+.grid-container linxreader {
   position: relative;
 }
 

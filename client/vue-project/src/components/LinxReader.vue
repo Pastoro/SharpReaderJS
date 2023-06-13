@@ -2,11 +2,11 @@
 <label class = "linxreader">
 
 <button 
-@click="isActive=!isActive"
+@click="onClick()"
 >
 
 {{ renderWord }} </button>
-<LinxMenu v-if="isActive" :searchedTerm="renderWord" :queryResult="returnWord" @gotDictionaryResult="(response) => {returnWord = response}"></LinxMenu>
+
 </label>
 
 </template>
@@ -14,8 +14,12 @@
 
 
 <script>
+//TODO I have to either rewrite my component somehow. or to make the dynamic positioning funciton I would have to rewrite that portion of it. Maybe you can set a separate active object with which to position your popup with.
+    import { vModelCheckbox } from 'vue';
+import LinxMenu from './LinxMenu.vue';
+    var renderedMenusIndex = 0;
+    var renderedMenusArray = [];
 
-    import LinxMenu from './LinxMenu.vue';
 
     export default {
       components: {
@@ -24,7 +28,7 @@
         props: {renderWord : String,
                 wordId : String,
                 learned : Number,
-                returnedWord : String,
+                isMounted : Boolean,
                 created() {
 
                     this.wordReturn = this.renderWord;
@@ -34,8 +38,11 @@
             },
         data() {
             return {
+                index: 0,
+                renderedMenus: [],
                 returnWord: "",
                 isActive: false,
+                isActive2: false,
                 wordReturn: "",
                 idReturn: null,
                 learnedReturn: 0,
@@ -53,7 +60,26 @@
             }
         },
         methods: {
+          
 
+          onClick(){
+            if (!this.isActive && !this.isActive2) {
+              this.isActive = true;
+            }
+            else if (this.isActive && !this.isActive2) {
+              this.isActive = false;
+              this.isActive2 = true;
+            }
+            else if (!this.isActive && this.isActive2) {
+              this.isActive = true;
+              this.isActive2 = false;
+            }
+            else if (this.isActive && this.isActive2) {
+              this.isActive = false;
+              this.isActive2 = false;
+            }
+            return this.index;
+          }
 
 
 
@@ -66,5 +92,8 @@
 
 <style>
 
+.linxreader {
+  position: relative;
+}
 
 </style>
