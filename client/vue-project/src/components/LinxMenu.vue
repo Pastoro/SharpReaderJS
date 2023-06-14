@@ -45,16 +45,7 @@ export default{
     },
 
     methods:{
-        async getDictionaryResult(term){ //TODO supposedly computed properties are better and watch is discouraged
-            //TODO Leave this as is for now, assuming we're gonna' use a third-party dictionary for this anyways.
-            console.log(term);
-            console.log("FIRED");
-
-            var returnType = ((await axios({ method: "GET", params: {QueryWord: term}, responseType: 'json', url: " http://localhost:8030/fetchWord"})).data);
-          console.log(returnType);
-          this.$emit("gotDictionaryResult",returnType);
-          return returnType;
-        }
+        
     },
     mounted(){
         this.$emit('menumounted', true);

@@ -7,29 +7,33 @@
         <div class="grid-container"  > <!-- v-for state === unknown word, class = unknownword  -->
 
           <!-- <div :style="{color : activeColor}" :id="`container-${index}`">{{ word }}   XXX possibly add a check in here to change the colour accordingly-->
+ 
           <linxreader    
-          v-for="element,index in words"
+          v-for="(element,index) in words"
           :id="`linxreader${index}`"
           word="element.word"
           :renderWord="element.word" 
           :learned="element.state"
           :class="linxreadermethod(element.word,element.state)"
-          @click="element.state = ClickEvent(element.state, element.word, index);getDictionaryResult(element.word)"
+          @click="() => {displayIndex = index; element.state = ClickEvent(element.state);getDictionaryResult(element.word); menuDisplay = true}"
           >
 
           </linxreader>
 
-
-    
+        <Teleport v-if="menuDisplay" :to="`#linxreader${displayIndex}`">
+          <LinxMenu
+          v-if="menuDisplay"
+          :queryResult="returnWord" 
+          :searchedTerm="menuWord" 
+          >
+          </LinxMenu> 
+        </Teleport>
         </div>
         
-        <Teleport  :to="`#linxreader${displayIndex}`"  >     
-    <LinxMenu
-    @gotDictionaryResult="(response) => {returnWord = response}"
-     :queryResult="returnWord" 
-     :searchedTerm="menuWord" >
-    </LinxMenu> 
-    </Teleport>  
+
+
+
+
 
       </div>
 
@@ -40,6 +44,7 @@
     import linxreader from "../components/LinxReader.vue"
     import axios from 'axios';
     import LinxMenu from "../components/LinxMenu.vue";
+import { objectToString } from "@vue/shared";
 
 
     export default{
@@ -79,12 +84,14 @@
             console.log(term);
             console.log("FIRED");
 
-            var returnType = ((await axios({ method: "GET", params: {QueryWord: term}, responseType: 'json', url: " http://localhost:8030/fetchWord"})).data);
-          console.log(returnType);
-          this.$emit("gotDictionaryResult",returnType);
+          var returnType = ((await axios({ method: "GET", params: {QueryWord: term}, responseType: 'json', url: " http://localhost:8030/fetchWord"})).data);
+          console.log(typeof returnType);
+          console.log(typeof term);
+          this.menuWord = term;
+          this.returnWord = returnType;
           //this.menuDisplay = !this.menuDisplay;
-          console.log(ctx.teleports);
-          return returnType;
+          //console.log(ctx.teleports);
+          //return returnType;
           },
           LoadHandler(textMap, wordState) {
             //this.wordMap = textMap;
@@ -129,11 +136,9 @@
             }
             return classA;
           },
-          ClickEvent: function(state, word, index) {
-            
-            this.menuWord = word;
-            this.displayIndex = index;
-            console.log(index);
+          ClickEvent(state) {
+
+
             console.log(state);
             state = this.mywordState.LookedUpState;
             return state;
@@ -180,8 +185,7 @@
   text-align: center;
 }
 
-.grid-container linxreader {
-  position: relative;
-}
+
+
 
 </style>
