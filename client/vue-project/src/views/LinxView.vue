@@ -5,19 +5,36 @@
       <h1>This is the Linx Page</h1>
       <linximporter @load="LoadHandler"></linximporter> <!-- TODO assign dynamic id -->
         <div class="grid-container"  > <!-- v-for state === unknown word, class = unknownword  -->
+
           <!-- <div :style="{color : activeColor}" :id="`container-${index}`">{{ word }}   XXX possibly add a check in here to change the colour accordingly-->
+ 
           <linxreader    
-          v-for="element in words"
+          v-for="(element,index) in words"
+          :id="`linxreader${index}`"
+          word="element.word"
           :renderWord="element.word" 
           :learned="element.state"
           :class="linxreadermethod(element.word,element.state)"
-          @click="element.state = ClickEvent(element.state)"
+          @click="() => {displayIndex = index; element.state = ClickEvent(element.state);getDictionaryResult(element.word); menuDisplay = true}"
           >
-            
-        
+
           </linxreader>
+
+        <Teleport v-if="menuDisplay" :to="`#linxreader${displayIndex}`">
+          <LinxMenu
+          v-if="menuDisplay"
+          :queryResult="returnWord" 
+          :searchedTerm="menuWord" 
+          >
+          </LinxMenu> 
+        </Teleport>
         </div>
-    
+        
+
+
+
+
+
       </div>
 
 
@@ -27,17 +44,20 @@
     import linxreader from "../components/LinxReader.vue"
     import axios from 'axios';
     import LinxMenu from "../components/LinxMenu.vue";
+import { objectToString } from "@vue/shared";
 
 
     export default{
-      mounted : function() {
-          this.HandleTextRender();
-        },
+
         data () {
 
           return {
            // renderWord: '',
            // learned: '',
+          returnWord : "",
+          menuDisplay : false,
+          displayIndex: 0,
+          menuWord : "",
           classValue: "",
           activeColor: 'red',
           mywordState : null,
@@ -59,6 +79,20 @@
 }
         ,
         methods: {
+          async getDictionaryResult(term){ //TODO supposedly computed properties are better and watch is discouraged
+            //TODO Leave this as is for now, assuming we're gonna' use a third-party dictionary for this anyways.
+            console.log(term);
+            console.log("FIRED");
+
+          var returnType = ((await axios({ method: "GET", params: {QueryWord: term}, responseType: 'json', url: " http://localhost:8030/fetchWord"})).data);
+          console.log(typeof returnType);
+          console.log(typeof term);
+          this.menuWord = term;
+          this.returnWord = returnType;
+          //this.menuDisplay = !this.menuDisplay;
+          //console.log(ctx.teleports);
+          //return returnType;
+          },
           LoadHandler(textMap, wordState) {
             //this.wordMap = textMap;
             this.mywordState = wordState;
@@ -70,6 +104,7 @@
               word = key;
               state = value;
               this.words.push({word, state});
+              console.log(this.words);
             }
             console.log(this.words);
             //this.words.forEach(word => {console.log(word)});
@@ -101,7 +136,9 @@
             }
             return classA;
           },
-          ClickEvent: function(state) {
+          ClickEvent(state) {
+
+
             console.log(state);
             state = this.mywordState.LookedUpState;
             return state;
@@ -110,6 +147,9 @@
       },
         computed: {
 
+        },
+        mounted(){
+          console.log("MOUNTED HERE");
         }
 
         
@@ -144,8 +184,8 @@
   font-size: 30px;
   text-align: center;
 }
-.grid-container linxreader{
-  position: relative;
-}
+
+
+
 
 </style>
