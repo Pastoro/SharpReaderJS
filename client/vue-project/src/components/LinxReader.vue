@@ -1,11 +1,11 @@
 <template>
 <label class = "linxreader">
 
-<button 
+<span 
 @click="onClick()"
 >
 
-{{ renderWord }} </button>
+{{ renderWord }} </span>
 
 </label>
 

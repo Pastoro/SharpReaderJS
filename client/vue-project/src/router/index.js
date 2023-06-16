@@ -21,7 +21,10 @@ const router = createRouter({
     {
       path: '/linx',
       name: 'linx',
-      component: LinxView
+      component: LinxView,
+      meta: {
+        isHidden: true,
+      }
     }
   ]
 })

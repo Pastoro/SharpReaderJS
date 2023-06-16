@@ -2,8 +2,7 @@
     <div id="linx">
         
         <br>
-      <h1>This is the Linx Page</h1>
-      <linximporter @load="LoadHandler"></linximporter> <!-- TODO assign dynamic id -->
+      <linximporter v-if="!menuDisplay" @load="LoadHandler"></linximporter> <!-- TODO assign dynamic id -->
         <div class="grid-container"  > <!-- v-for state === unknown word, class = unknownword  -->
 
           <!-- <div :style="{color : activeColor}" :id="`container-${index}`">{{ word }}   XXX possibly add a check in here to change the colour accordingly-->
@@ -46,7 +45,7 @@
     import LinxMenu from "../components/LinxMenu.vue";
 import { objectToString } from "@vue/shared";
 
-
+//XXX Probably just have to make the sizing of the CSS grid elements dynamic
     export default{
 
         data () {
@@ -162,16 +161,17 @@ import { objectToString } from "@vue/shared";
 <style>
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   background-color: #10436d;
   padding: 10px;
-  grid-auto-rows: minmax(100px, auto);
+  grid-auto-rows: repeat(1fr,120px 60px 120px);
+  row-gap: 30px;
+  column-gap: 30px;
 }
 .wordthingKnown {
   display:inline;
   background-color: rgba(255, 0, 34, 0.8);
   border: 1px solid rgba(25, 0, 255, 0.8);
-  padding: 20px;
   font-size: 30px;
   text-align: center;
   font: bold;
@@ -180,7 +180,6 @@ import { objectToString } from "@vue/shared";
   display:inline;
   background-color: rgba(0, 255, 179, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 20px;
   font-size: 30px;
   text-align: center;
 }
