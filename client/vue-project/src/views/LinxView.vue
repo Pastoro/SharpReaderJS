@@ -53,6 +53,7 @@ import { objectToString } from "@vue/shared";
           return {
            // renderWord: '',
            // learned: '',
+           renderWords: [],
           returnWord : "",
           menuDisplay : false,
           displayIndex: 0,
@@ -92,19 +93,20 @@ import { objectToString } from "@vue/shared";
           //console.log(ctx.teleports);
           //return returnType;
           },
-          LoadHandler(textMap, wordState) {
+          LoadHandler(textMap, wordState, wordArray) {
             //this.wordMap = textMap;
             this.mywordState = wordState;
             console.log(this.mywordState);
             var word;
             var state;
 
-            for (const [key, value] of textMap) {
+            for (const key of wordArray) {
               word = key;
-              state = value;
+              state = 0;
               this.words.push({word, state});
               console.log(this.words);
             }
+            this.renderWords = wordArray;
             console.log(this.words);
             //this.words.forEach(word => {console.log(word)});
           },
