@@ -134,6 +134,11 @@ import { objectToString } from "@vue/shared";
             }
             else if (state === this.mywordState.LookedUpState) {
               classA = 'wordthingKnown';
+              this.words.forEach(element => {
+                if (element.word === renderWord) {
+                  element.state = this.mywordState.LookedUpState;
+                }
+              });
             }
             return classA;
           },
@@ -162,6 +167,8 @@ import { objectToString } from "@vue/shared";
 
 <style>
 .grid-container {
+  justify-items: center;
+  align-items: center;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   background-color: #10436d;
