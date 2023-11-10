@@ -1,4 +1,4 @@
-# PersonalWebsiteJS/Sharp-ReaderJS
+# Sharp-ReaderJS
 
 This is a reimplementation of my Sharp-Reader project using Vue.JS, PostgreSQL, and Go.
 Partially chosen as a learning experience but also to make the application more portable by moving away from .Net.
